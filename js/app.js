@@ -15,64 +15,64 @@ $(document).ready(function(){
 	/*--- Play Hot || Cold ---*/
 
 	var targetNum = randomNum(0, 100);
-	var guess;
-	var feedback;
+	var count = 0;
 
-	// generate random number from 0-100
-	function randomNum(min, max) {
+	function displayCount() {	// display # of guesses
+		$("#count").text(count);
+	}
+
+	function randomNum(min, max) {	// generate random number from 0-100
 		return Math.floor(Math.random() * (max - min + 1)) + min;
 	}
 
-	// start new game
-	function newGame() {
-		//$("#guessList").children(remove());
-		//$("#feedback").text("Make your Guess!");
+	function newGame() {	// start new game
+		$("#feedback").text("Make your Guess!");
+		$("#guessList").children().remove();
+		count = 0;
+		displayCount();
 		targetNum = randomNum(0, 100);
 	}
 
-	function checkGuess() {		// compare user guess to target number
-			if (targetNum + 50 < guess || guess < targetNum - 50) {
-				feedback = "freezing";
-			} else if (targetNum + 20 < guess || guess < targetNum - 20) {
-				feedback = "cold";
-			} else if (targetNum + 10 < guess || guess < targetNum - 10) {
-				feedback = "warm";
-			} else if (targetNum + 1 < guess || guess < targetNum - 1) {
-				feedback = "hot";
-			} else if (targetNum + 1 == guess || guess == targetNum - 1) {
-				feedback = "burning up!";
+	function checkGuess(guess, target) {	// compare user guess to target number
+			if (target + 50 < guess || guess < target - 50) {
+				return "freezing";
+			} else if (target + 20 < guess || guess < target - 20) {
+				return "cold";
+			} else if (target + 10 < guess || guess < target - 10) {
+				return "warm";
+			} else if (target + 1 < guess || guess < target - 1) {
+				return "hot";
+			} else if (target + 1 == guess || guess == target - 1) {
+				return "burning up!";
 			} else {
-				feedback = "Congratulations!";
+				return "Congratulations!";
 			}
 	}
 
-	$("#guessButton").click(function(){
-		guess = $("#userGuess").val();	// receive user guess
 
-		if (0 <= guess && guess <= 100) {	// check if valid
-			checkGuess();
+	$("#guessButton").click(function(event){
+		event.preventDefault();
+		var userGuess = $("#userGuess").val();	// receive user guess
+		var feedback;
 
-			// return feedback on guess (absolute)
-			$("#feedback").text(feedback);
-			alert(feedback);
+		if (userGuess && 0 <= userGuess && userGuess <= 100) {	// check if valid
+			feedback = checkGuess(userGuess, targetNum);
 
-			// add guess to guess list
-			$("#guessList").prepend($("<li>" + guess + "</li>"));
+			$("#feedback").text(feedback);	// return feedback on guess (absolute)
 
-			// track and display # of guesses
-			//$("#count").text(/*increment*/);
+			$("#guessList").append($("<li>" + userGuess + "</li>"));	// add guess to guess list
+
+			count++;	// track # of guesses
+			displayCount();
 
 		} else {
 			alert("Please submit an integer from 0 to 100.");
 		}
+
+		$("#userGuess").val("").focus();
 	});
 
-	$(".new").click(function(){
-		newGame();
-		alert(targetNum);
-	});
-
-	// newGame(); at beginning?
+	$(".new").click(newGame);
 
 
 });
