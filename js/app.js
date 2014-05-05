@@ -14,7 +14,9 @@ $(document).ready(function(){
 
 	/*--- Play Hot || Cold ---*/
 
-	var targetNum;
+	var targetNum = randomNum(0, 100);
+	var guess;
+	var feedback;
 
 	// generate random number from 0-100
 	function randomNum(min, max) {
@@ -25,17 +27,10 @@ $(document).ready(function(){
 	function newGame() {
 		//$("#guessList").children(remove());
 		//$("#feedback").text("Make your Guess!");
-		return randomNum(0, 100);
+		targetNum = randomNum(0, 100);
 	}
 
-	function checkGuess() {
-		
-		var guess = $("#userGuess").val();	// receive user guess
-		var feedback;
-
-		if (0 <= guess && guess <= 100) {	// check if valid
-
-			// compare user guess to target number
+	function checkGuess() {		// compare user guess to target number
 			if (targetNum + 50 < guess || guess < targetNum - 50) {
 				feedback = "freezing";
 			} else if (targetNum + 20 < guess || guess < targetNum - 20) {
@@ -49,26 +44,31 @@ $(document).ready(function(){
 			} else {
 				feedback = "Congratulations!";
 			}
+	}
 
-			// track and display # of guesses
-			//$("#count").text(/*increment*/);
+	$("#guessButton").click(function(){
+		guess = $("#userGuess").val();	// receive user guess
+
+		if (0 <= guess && guess <= 100) {	// check if valid
+			checkGuess();
 
 			// return feedback on guess (absolute)
-			$("#feedback").text("feedback");
-			//alert(feedback);
+			$("#feedback").text(feedback);
+			alert(feedback);
 
 			// add guess to guess list
 			$("#guessList").prepend($("<li>" + guess + "</li>"));
 
+			// track and display # of guesses
+			//$("#count").text(/*increment*/);
+
 		} else {
 			alert("Please submit an integer from 0 to 100.");
 		}
-	}
-
-	$("#guessButton").click(checkGuess);
+	});
 
 	$(".new").click(function(){
-		targetNum = newGame();
+		newGame();
 		alert(targetNum);
 	});
 
