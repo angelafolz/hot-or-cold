@@ -319,3 +319,18 @@ ul.guessBox li {
 	margin: 0.2em;
 	color: #fff;
 }
+
+.feedbackType {
+    margin-top: 30px;
+}
+.feedbackType input {
+    float: left;
+    width: 30px;
+    height: 20px;
+}
+.feedbackType span {
+    display: block;
+    line-height: 30px;
+    text-align: left;
+    color: #fff;
+}

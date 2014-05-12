@@ -16,6 +16,7 @@ $(document).ready(function(){
 
 	var targetNum = randomNum(0, 100);
 	var count = 0;
+	var prevUserGuess;
 
 	function displayCount() {	// display # of guesses
 		$("#count").text(count);
@@ -31,6 +32,7 @@ $(document).ready(function(){
 		count = 0;
 		displayCount();
 		targetNum = randomNum(0, 100);
+		prevUserGuess = 0;
 	}
 
 	function checkGuess(guess, target) {	// compare user guess to target number
@@ -49,6 +51,16 @@ $(document).ready(function(){
 			}
 	}
 
+	function compareGuesses(curGuess, prevGuess, target) {	// compare user guess to previous user guess
+		if (curGuess == target) {
+			return "Congratulations!";
+		} else if (Math.abs(target - curGuess) < Math.abs(target - prevGuess)) {
+			return "warmer";
+		} else {
+			return "colder";
+		}
+	}
+
 
 	$("#guessButton").click(function(event){
 		event.preventDefault();
@@ -56,7 +68,15 @@ $(document).ready(function(){
 		var feedback;
 
 		if (userGuess && 0 <= userGuess && userGuess <= 100) {	// check if valid
-			feedback = checkGuess(userGuess, targetNum);
+			if ($("#absfeedback").is(":checked")) {	// play with absolute feedback
+				feedback = checkGuess(userGuess, targetNum);
+			} else {	// play with relative feedback
+				if (prevUserGuess) {
+					feedback = compareGuesses(userGuess, prevUserGuess, targetNum);
+				} else {
+					feedback = checkGuess(userGuess, targetNum);
+				}
+			}
 
 			$("#feedback").text(feedback);	// return feedback on guess (absolute)
 
@@ -64,6 +84,8 @@ $(document).ready(function(){
 
 			count++;	// track # of guesses
 			displayCount();
+
+			prevUserGuess = userGuess;
 
 		} else {
 			alert("Please submit an integer from 0 to 100.");
